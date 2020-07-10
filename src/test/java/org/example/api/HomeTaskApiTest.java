@@ -70,7 +70,7 @@ public class HomeTaskApiTest {
     }
 
     @Test(priority = 2)
-    public void deleteOrder() throws IOException {
+    public void deleteOrder() {
         Order order = new Order();
         order.setId(id);
 
@@ -83,9 +83,20 @@ public class HomeTaskApiTest {
     }
 
     @Test(priority = 3)
-    public void getInventory() {
+    public void deleteNegativeOrder() {
         Order order = new Order();
         order.setId(id);
+
+        given()
+                .pathParam("orderId", id)
+                .when()
+                .delete("/store/order/{orderId}")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test(priority = 4)
+    public void getInventory() {
 
         Map map = given()
                 .when()
