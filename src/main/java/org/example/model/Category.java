@@ -2,7 +2,7 @@ package org.example.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Category{
+public class Category {
 
 	@SerializedName("name")
 	private String name;
@@ -27,7 +27,7 @@ public class Category{
 	}
 
 	@Override
- 	public String toString(){
+ 	public String toString() {
 		return 
 			"Category{" + 
 			"name = '" + name + '\'' + 
