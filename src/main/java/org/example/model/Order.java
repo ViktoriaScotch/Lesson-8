@@ -1,6 +1,5 @@
-package store;
+package org.example.model;
 
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;

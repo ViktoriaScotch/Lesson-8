@@ -8,9 +8,11 @@ import io.restassured.http.ContentType;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import store.Order;
+import org.example.model.Order;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
@@ -92,5 +94,22 @@ public class HomeTaskApiTest {
                 .get("/store/order/{orderId}")
                 .then()
                 .statusCode(404);
+    }
+
+    /**
+     * Проверка на корректное получение данных из инвентаря.
+     */
+    @Test
+    public void checkGetInventory() {
+        Map<String, Integer> inventory = given()
+                .when()
+                .get("/store/inventory")
+                .then()
+                .statusCode(200)
+                .extract().body()
+                .jsonPath()
+                .getMap("");
+
+        Assert.assertTrue(inventory.containsKey("pending"), "Inventory не содержит статус pending" );
     }
 }
