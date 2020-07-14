@@ -31,7 +31,7 @@ public class HomeTaskApiTest {
 
     @BeforeClass
     public void prepare() throws IOException {
-        //System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
+
         RestAssured.requestSpecification = (RequestSpecification) new RequestSpecBuilder()
                 .setBaseUri("https://petstore.swagger.io/v2/")
                 .addHeader("api_key", "api_key")
@@ -50,7 +50,7 @@ public class HomeTaskApiTest {
         order.setId(id);
         order.setPetId(petId);
         order.setQuantity(quantity);
-        order.setShipDate("2020-07-14T15:27:48.913Z");
+        order.setShipDate("2020-07-14T16:13:12.430Z");
         order.setStatus("placed");
         order.setComplete(true);
         given()
@@ -73,7 +73,6 @@ public class HomeTaskApiTest {
                 .statusCode(200)
                 .extract().body()
                 .as(Order.class);
-        //Assert.assertEquals("orderId", orderId);
     }
 
     @Test(priority = 2)
