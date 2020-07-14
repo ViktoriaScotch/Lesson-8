@@ -3,6 +3,7 @@ package org.example.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Pet{
 
@@ -84,4 +85,22 @@ public class Pet{
 			",status = '" + status + '\'' + 
 			"}";
 		}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pet pet = (Pet) o;
+        return id == pet.id &&
+                Objects.equals(photoUrls, pet.photoUrls) &&
+                Objects.equals(name, pet.name) &&
+                Objects.equals(category, pet.category) &&
+                Objects.equals(tags, pet.tags) &&
+                Objects.equals(status, pet.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(photoUrls, name, id, category, tags, status);
+    }
 }
