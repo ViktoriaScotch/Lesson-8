@@ -27,6 +27,7 @@ public class HomeTaskApiTest {
     public int orderId = new Random().nextInt(10);
     int id = new Random().nextInt(10);
     int petId = new Random().nextInt(10);
+    int quantity = new Random().nextInt(10);
 
     @BeforeClass
     public void prepare() throws IOException {
@@ -48,8 +49,8 @@ public class HomeTaskApiTest {
 
         order.setId(id);
         order.setPetId(petId);
-        order.setQuantity(new Random().nextInt(10));
-        order.setShipDate("2020-07-14T14:28:41.247Z");
+        order.setQuantity(quantity);
+        order.setShipDate("2020-07-14T14:49:49.231Z");
         order.setStatus("placed");
         order.setComplete(true);
         given()
@@ -62,7 +63,7 @@ public class HomeTaskApiTest {
 
 
     @Test(priority = 1)
-    public void getUp(){
+    public void getUp() {
 
         Order actual = given()
                 .pathParam("orderId", orderId)
