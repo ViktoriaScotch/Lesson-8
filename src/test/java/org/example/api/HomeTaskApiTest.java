@@ -93,6 +93,6 @@ public class HomeTaskApiTest {
 
         Assert.assertTrue(map.containsKey("available"),"Inventory не содержит статус available");
         Assert.assertTrue(map.containsKey("sold"),"Inventory не содержит статус sold");
-        Assert.assertTrue(((Double) map.get("Availabale"))>0,"Параметр Availabale <= 0");
+        Assert.assertTrue(((Double) map.get("available"))>0,"Параметр Availabale <= 0");
     }
 }
