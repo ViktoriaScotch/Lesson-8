@@ -134,7 +134,7 @@ public class ApiTest {
                 .getList("status");
 
         for (String actualStatus : petsByStatus) {
-            if (!(actualStatus.equals(status)/* || actualStatus.equals(status2)*/)) {
+            if (!actualStatus.equals(status)) {
                 check = false;
             }
         }
@@ -176,8 +176,8 @@ public class ApiTest {
                 .extract().body()
                 .as(Pet.class);
 
-        Assert.assertEquals(actual.getName(), pet.getName(), "Клички разные");
-        Assert.assertNotEquals(actual.getName(), control, "Кличка не поменялась");
+        Assert.assertEquals(actual.getName(), pet.getName(), "Кличка не совпадаете с переданной для обновления");
+        Assert.assertNotEquals(actual.getName(), control, "Кличка та же, что и была до запроса на обновление");
     }
 
 }
