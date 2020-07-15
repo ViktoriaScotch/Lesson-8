@@ -35,6 +35,7 @@ public class HomeTaskApiTest {
 
     @Test
     public void checkGetInventory() {
+        String status = "pending";
         Map<String, Integer> inventory = given()
                 .when()
                 .get("/store/inventory")
@@ -43,7 +44,7 @@ public class HomeTaskApiTest {
                 .extract().body()
                 .as(Map.class);
 
-        Assert.assertTrue(inventory.containsKey("pending"), "Inventory не содержит статус pending");
+        Assert.assertTrue(inventory.containsKey(status), "Inventory не содержит статус " + status);
     }
 
     @Test
