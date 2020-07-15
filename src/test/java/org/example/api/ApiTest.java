@@ -58,12 +58,12 @@ public class ApiTest {
 
         given()  // часть стандартного синтаксиса BDD. Означает предварительные данные. Иначе говоря ДАНО:
                 .body(pet) // указываем что  помещаем в тело запроса. Поскольку у нас подключен Gson, он преобразуется в JSON
-            .when()   // КОГДА:
+                .when()   // КОГДА:
                 .post("/pet") // выполняем запрос методом POST к ресурсу /pet, при этом используется ранее
                 // созданная "шапка". Именно в этом методе создаётся "текстовый файл" запроса, он отправляется
                 // посредством HTTP к серверу. Затем в этом же методе получается ответ. После этого метода мы
                 // работаем с ОТВЕТОМ
-            .then() // ТОГДА: (указывает, что после этой части будут выполняться проверки-утверждения)
+                .then() // ТОГДА: (указывает, что после этой части будут выполняться проверки-утверждения)
                 .statusCode(200); // например проверка кода ответа.он просто выдёргивается из текста ответа
 
         /*
@@ -79,15 +79,15 @@ public class ApiTest {
         Pet actual =
                 given()
                         .pathParam("petId", id) // заранее задаём переменную petId
-                    .when()
+                        .when()
                         .get("/pet/{petId}") // которая подставится в путь ресурса перед выполнением запроса.
                         // после этого метода мы так же будем иметь уже ОТВЕТ от сервера.
-                    .then()
+                        .then()
                         .statusCode(200)
                         .extract().body() // у полученного ответа мы можем взять тело
                         .as(Pet.class); // и распарсить его как объект Pet. Всё это получается автоматически, так как
-                        // у нас подключена библиотека для работы с JSON и мы дополнительно указали в общей "шапке"
-                        // что хотим получать и отправлять объекты в формате JSON
+        // у нас подключена библиотека для работы с JSON и мы дополнительно указали в общей "шапке"
+        // что хотим получать и отправлять объекты в формате JSON
         // Здесь сравниваем только имя, поскольку многие поля у наших объектов не совпадают: поскольку
         // мы не задали список тэгов животного, в объекте pet он будет null, тогда как в объекте actual Gson присвоит
         // ему пустой список. Это происходит потому что в ответ всегда приходит полный JSON модели
@@ -103,15 +103,15 @@ public class ApiTest {
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         given()
                 .pathParam("petId", System.getProperty("petId"))
-            .when()
+                .when()
                 .delete("/pet/{petId}")
-            .then()
+                .then()
                 .statusCode(200);
         given()
                 .pathParam("petId", System.getProperty("petId"))
-             .when()
+                .when()
                 .get("/pet/{petId}")
-             .then()
+                .then()
                 .statusCode(404);
     }
 
@@ -122,7 +122,7 @@ public class ApiTest {
     public void testGetByStatus() {
         String status = "sold";
         boolean check = true;
-        List <String>petsByStatus = given()
+        List<String> petsByStatus = given()
                 .queryParam("status", status)
                 .when()
                 .get("/pet/findByStatus")
@@ -133,13 +133,51 @@ public class ApiTest {
                 .jsonPath()
                 .getList("status");
 
-        for (String actualStatus : petsByStatus){
-            if (!(actualStatus.equals(status)/* || actualStatus.equals(status2)*/)){
+        for (String actualStatus : petsByStatus) {
+            if (!(actualStatus.equals(status)/* || actualStatus.equals(status2)*/)) {
                 check = false;
             }
         }
 
         Assert.assertTrue(check, "Нет запрашиваемого статуса");
+    }
+
+    @Test
+    public void testPut() {
+        Pet pet = new Pet();
+        int id = 33;
+        pet.setId(id);
+        pet.setName("Новая кличка");
+
+        Pet existing = given()
+                .pathParam("petId", id)
+                .when()
+                .get("/pet/{petId}")
+                .then()
+                .statusCode(200)
+                .extract().body()
+                .as(Pet.class);
+
+        String control = existing.getName();
+
+        given()
+                .body(pet)
+                .when()
+                .put("/pet")
+                .then()
+                .statusCode(200);
+
+        Pet actual = given()
+                .pathParam("petId", id)
+                .when()
+                .get("/pet/{petId}")
+                .then()
+                .statusCode(200)
+                .extract().body()
+                .as(Pet.class);
+
+        Assert.assertEquals(actual.getName(), pet.getName(), "Клички разные");
+        Assert.assertNotEquals(actual.getName(), control, "Кличка не поменялась");
     }
 
 }
