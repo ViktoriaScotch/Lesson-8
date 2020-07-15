@@ -17,17 +17,8 @@ import static io.restassured.RestAssured.given;
 
 public class HomeTaskApiTest {
 
-    Order order;
-
     @BeforeClass
     public void set() throws IOException {
-        order = new Order();
-        order.setId(1);
-        order.setPetId(1);
-        order.setQuantity(3);
-        order.setShipDate("2020-07-15T10:20:42.179Z");
-        order.setStatus("placed");
-        order.setComplete(true);
 
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         RestAssured.requestSpecification = new RequestSpecBuilder()
@@ -42,7 +33,7 @@ public class HomeTaskApiTest {
 
     }
 
-    @Test(priority = 1)
+    @Test
     public void checkGetInventory() {
         Map<String, Integer> inventory = given()
                 .when()
@@ -50,14 +41,24 @@ public class HomeTaskApiTest {
                 .then()
                 .statusCode(200)
                 .extract().body()
-                .jsonPath()
-                .getMap("");
+                .as(Map.class);
 
         Assert.assertTrue(inventory.containsKey("pending"), "Inventory не содержит статус pending");
     }
 
-    @Test(priority = 2)
+    @Test
     public void testOrderSaving() {
+
+        Order order;
+
+        order = new Order();
+        order.setId(1);
+        order.setPetId(1);
+        order.setQuantity(3);
+        order.setShipDate("2020-07-15T10:20:42.179Z");
+        order.setStatus("placed");
+        order.setComplete(true);
+
         given()
                 .body(order)
                 .when()
@@ -66,7 +67,7 @@ public class HomeTaskApiTest {
                 .statusCode(200);
 
         Order actualOrder = given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", 1)
                 .when()
                 .get("/store/order/{orderId}")
                 .then()
@@ -79,15 +80,11 @@ public class HomeTaskApiTest {
 
     }
 
-    @Test(priority = 3)
-    public void testDeleteOrder() {
+    @Test
+    public void testDeleteOrder() throws IOException {
 
-        given()
-                .body(order)
-                .when()
-                .post("/store/order")
-                .then()
-                .statusCode(200);
+        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
+
         given()
                 .pathParam("orderId", System.getProperty("orderId"))
                 .when()

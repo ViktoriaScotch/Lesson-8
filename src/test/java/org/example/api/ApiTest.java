@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -98,7 +99,7 @@ public class ApiTest {
     }
 
     @Test
-    public void tetDelete() throws IOException {
+    public void testDelete() throws IOException {
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         given()
                 .pathParam("petId", System.getProperty("petId"))
@@ -113,4 +114,32 @@ public class ApiTest {
              .then()
                 .statusCode(404);
     }
+
+
+    //запрос по статусу
+    //тест проверяет, совпадают ли статусы с тем, по которому запрашивали
+    @Test
+    public void testGetByStatus() {
+        String status = "sold";
+        boolean check = true;
+        List <String>petsByStatus = given()
+                .queryParam("status", status)
+                .when()
+                .get("/pet/findByStatus")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .getList("status");
+
+        for (String actualStatus : petsByStatus){
+            if (!(actualStatus.equals(status)/* || actualStatus.equals(status2)*/)){
+                check = false;
+            }
+        }
+
+        Assert.assertTrue(check, "Нет запрашиваемого статуса");
+    }
+
 }

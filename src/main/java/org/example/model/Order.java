@@ -93,5 +93,15 @@ public class Order {
                 complete == order.complete;
     }
 
-
+    @Override
+    public String toString() {
+      return "Order{" +
+                "id = '" + id + '\'' +
+                ",petId = '" + petId + '\'' +
+                ",quantity = '" + quantity + '\'' +
+                ",shipDate = '" + shipDate + '\'' +
+                ",status = '" + status + '\'' +
+                ",complete = '" + complete + '\'' +
+                "}";
+    }
 }
