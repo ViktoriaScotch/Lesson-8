@@ -15,6 +15,18 @@ public class Order {
 	@SerializedName("id")
 	private int id;
 
+	@Override
+	public String toString() {
+		return "Order{" +
+				"petId=" + petId +
+				", quantity=" + quantity +
+				", id=" + id +
+				", shipDate='" + shipDate + '\'' +
+				", complete=" + complete +
+				", status='" + status + '\'' +
+				'}';
+	}
+
 	@SerializedName("shipDate")
 	private String shipDate;
 
@@ -46,16 +58,13 @@ public class Order {
 		super();
 	}
 
-	@Override
-	public String toString() {
-		return "Order{" +
-				"petId=" + petId +
-				", quantity=" + quantity +
-				", id=" + id +
-				", shipDate='" + shipDate + '\'' +
-				", complete=" + complete +
-				", status='" + status + '\'' +
-				'}';
+	public Order(int petId, int quantity, int id, String shipDate, boolean complete, String status) {
+		this.petId = petId;
+		this.quantity = quantity;
+		this.id = id;
+		this.shipDate = shipDate;
+		this.complete = complete;
+		this.status = status;
 	}
 
 	@Override
@@ -67,22 +76,13 @@ public class Order {
 				quantity == order.quantity &&
 				id == order.id &&
 				complete == order.complete &&
-				shipDate.equals(order.shipDate) &&
-				status.equals(order.status);
+				Objects.equals(shipDate, order.shipDate) &&
+				Objects.equals(status, order.status);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(petId, quantity, id, shipDate, complete, status);
-	}
-
-	public Order(int petId, int quantity, int id, String shipDate, boolean complete, String status) {
-		this.petId = petId;
-		this.quantity = quantity;
-		this.id = id;
-		this.shipDate = shipDate;
-		this.complete = complete;
-		this.status = status;
 	}
 
 	@Override
