@@ -23,19 +23,17 @@ public class HomeTaskApiTest {
     @BeforeClass
     public void prepare() throws IOException {
         order = new Order();
-        int id = new Random().nextInt(10);
-        int petId = new Random().nextInt(20);
-        int quantity = new Random().nextInt(30);
-        order.setId(id);
-        order.setPetId(petId);
-        order.setQuantity(quantity);
-        order.setShipDate("2020-07-15T19:21:10.379Z");
+
+        order.setId(10);
+        order.setPetId(10);
+        order.setQuantity(10);
+        order.setShipDate("2020-07-15T20:53:28.883+0000");
         order.setStatus("placed");
         order.setComplete(true);
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("https://petstore.swagger.io/v2/")
-                .addHeader("api_key", System.getProperty("api.key"))
+                .addHeader("api_key", "api_key")
                 .setAccept(ContentType.JSON)
                 .setContentType(ContentType.JSON)
                 .log(LogDetail.ALL)
@@ -44,7 +42,7 @@ public class HomeTaskApiTest {
         RestAssured.filters(new ResponseLoggingFilter());
     }
 
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void getUp() {
 
         given()
@@ -55,7 +53,7 @@ public class HomeTaskApiTest {
                 .statusCode(200);
 
         Order actual = given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", 10)
                 .when()
                 .get("/store/order/{orderId}")
                 .then()
@@ -64,26 +62,27 @@ public class HomeTaskApiTest {
                 .body()
                 .as(Order.class);
 
-        Assert.assertEquals(actual, order);
+        Assert.assertEquals(order, actual);
     }
 
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void delete() throws IOException {
+        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", 10)
                 .when()
                 .delete("/store/order/{orderId}")
                 .then()
                 .statusCode(200);
         given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", 10)
                 .when()
                 .get("/order/{orderId}")
                 .then()
                 .statusCode(404);
     }
 
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void inventory() {
         Map inventory = given()
                 .when()

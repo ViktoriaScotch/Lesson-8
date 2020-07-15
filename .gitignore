@@ -1,14 +1,14 @@
 # Project exclude paths
 /target/
-/my.properties
+/src/main/resources/my.properties
 ### Header element
-
+.idea
 ## First section
 *.jar
 *.war
 *.ear
 out/
-.idea
+
 ## Second section
 .gradle/
 build/
