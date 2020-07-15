@@ -1,5 +1,6 @@
 package org.example.api;
 
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -12,6 +13,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -23,6 +26,8 @@ import static io.restassured.RestAssured.given;
  *   api.key="yourApiKey"
  *   petId=1234567
  *   orderId=1234567
+ *
+ * Start with prepare method.
  */
 public class HomeTaskApiTest {
 
@@ -107,6 +112,24 @@ public class HomeTaskApiTest {
                 .then()
                 .statusCode(404);
 
+    }
+
+    /**
+     * Test pet inventory
+     */
+    @Test
+    public void testPetInventory() {
+
+        String response = given()
+                            .when()
+                            .get("store/inventory")
+                            .then()
+                            .statusCode(200)
+                            .extract().body().asString();
+
+        Gson gson = new Gson();
+        Map<String, String> inventoryMap = gson.fromJson(response, Map.class);
+        Assert.assertTrue(inventoryMap.containsKey("testing"));
     }
 
 }
