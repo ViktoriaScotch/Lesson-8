@@ -1,7 +1,6 @@
 package org.example.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.Objects;
 
@@ -83,15 +82,14 @@ public class Order {
         if (this == obj) {
             return true;
         }
-        if (obj.getClass() != this.getClass() || obj == null) {
+        if (obj.getClass() != getClass() || obj == null) {
             return false;
         }
         Order order = (Order) obj;
         return id == order.id &&
                 petId == order.petId &&
                 quantity == order.quantity &&
-                shipDate == order.shipDate &&
-                status == order.status &&
+                status.equals(order.status) &&
                 complete == order.complete;
     }
 
