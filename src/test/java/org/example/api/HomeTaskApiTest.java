@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 import org.example.model.Order;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -25,15 +24,15 @@ public class HomeTaskApiTest {
      */
     @BeforeClass
     public void setUp() throws IOException {
+        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         order = new Order();
         order.setPetId(1);
         order.setQuantity(1);
-        order.setId(1);
+        order.setId(Integer.parseInt(System.getProperty("orderId")));
         order.setShipDate("2020-07-13T06:16:42.914Z");
         order.setComplete(true);
         order.setStatus("placed");
 
-        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("https://petstore.swagger.io/v2/")
                 .addHeader("api_key", System.getProperty("api.key"))
@@ -59,7 +58,7 @@ public class HomeTaskApiTest {
                 .statusCode(200);
 
         Order actual = given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", order.getId())
                 .when()
                 .get("/store/order/{orderId}")
                 .then()
@@ -83,13 +82,13 @@ public class HomeTaskApiTest {
                 .then()
                 .statusCode(200);
         given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", order.getId())
                 .when()
                 .delete("/store/order/{orderId}")
                 .then()
                 .statusCode(200);
         given()
-                .pathParam("orderId", System.getProperty("orderId"))
+                .pathParam("orderId", order.getId())
                 .when()
                 .get("/store/order/{orderId}")
                 .then()
@@ -110,6 +109,6 @@ public class HomeTaskApiTest {
                 .jsonPath()
                 .getMap("");
 
-        Assert.assertTrue(inventory.containsKey("pending"), "Inventory не содержит статус pending" );
+        Assert.assertTrue(inventory.containsKey("sold"), "Inventory не содержит статус sold" );
     }
 }
