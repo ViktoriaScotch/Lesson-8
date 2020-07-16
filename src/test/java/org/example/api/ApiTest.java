@@ -98,7 +98,7 @@ public class ApiTest {
     }
 
     @Test
-    public void tetDelete() throws IOException {
+    public void testDelete() throws IOException {
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         given()
                 .pathParam("petId", System.getProperty("petId"))
