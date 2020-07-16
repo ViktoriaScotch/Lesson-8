@@ -1,3 +1,5 @@
 # Project exclude paths
 /target/
+.idea/jarRepositories.xml
 /src/main/resources/my.properties
+/.idea/
