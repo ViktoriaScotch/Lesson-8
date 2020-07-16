@@ -11,7 +11,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -113,71 +112,6 @@ public class ApiTest {
                 .get("/pet/{petId}")
                 .then()
                 .statusCode(404);
-    }
-
-
-    //запрос по статусу
-    //тест проверяет, совпадают ли статусы с тем, по которому запрашивали
-    @Test
-    public void testGetByStatus() {
-        String status = "sold";
-        boolean check = true;
-        List<String> petsByStatus = given()
-                .queryParam("status", status)
-                .when()
-                .get("/pet/findByStatus")
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .jsonPath()
-                .getList("status");
-
-        for (String actualStatus : petsByStatus) {
-            if (!actualStatus.equals(status)) {
-                check = false;
-            }
-        }
-
-        Assert.assertTrue(check, "Нет запрашиваемого статуса");
-    }
-
-    @Test
-    public void testPut() {
-        Pet pet = new Pet();
-        int id = 33;
-        pet.setId(id);
-        pet.setName("Новая кличка");
-
-        Pet existing = given()
-                .pathParam("petId", id)
-                .when()
-                .get("/pet/{petId}")
-                .then()
-                .statusCode(200)
-                .extract().body()
-                .as(Pet.class);
-
-        String control = existing.getName();
-
-        given()
-                .body(pet)
-                .when()
-                .put("/pet")
-                .then()
-                .statusCode(200);
-
-        Pet actual = given()
-                .pathParam("petId", id)
-                .when()
-                .get("/pet/{petId}")
-                .then()
-                .statusCode(200)
-                .extract().body()
-                .as(Pet.class);
-
-        Assert.assertEquals(actual.getName(), pet.getName(), "Кличка не совпадаете с переданной для обновления");
-        Assert.assertNotEquals(actual.getName(), control, "Кличка та же, что и была до запроса на обновление");
     }
 
 }
