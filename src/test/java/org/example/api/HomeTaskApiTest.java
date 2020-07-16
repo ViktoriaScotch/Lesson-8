@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.Random;
 
 import static io.restassured.RestAssured.given;
@@ -35,9 +36,11 @@ public class HomeTaskApiTest {
     public void checkObjectSaveAndDel() {
         Order order = new Order();
         int id = new Random().nextInt(100);
-        order.setId(id + 5);
-        order.setPetId(id + 15);
-        order.setQuantity(id + 10);
+        int petId = new Random().nextInt(1000);
+        int quantity = new Random().nextInt(50);
+        order.setId(id);
+        order.setPetId(petId);
+        order.setQuantity(quantity);
         order.setShipDate("2020-07-16");
         order.setStatus("placed");
         order.setComplete(true);
@@ -47,9 +50,10 @@ public class HomeTaskApiTest {
                 .post("/store/order")
                 .then()
                 .statusCode(200);
+
         Order actual =
                 given()
-                        .pathParam("orderId", id + 5)
+                        .pathParam("orderId", id )
                         .when()
                         .get("/store/order/{orderId}")
                         .then()
@@ -60,18 +64,32 @@ public class HomeTaskApiTest {
         Assert.assertEquals(actual.getPetId(), order.getPetId());
 
         given()
-                .pathParam("orderId", id + 5)
+                .pathParam("orderId", id )
                 .when()
                 .delete("store/order/{orderId}")
                 .then()
-
                 .statusCode(200);
+
         given()
-                .pathParam("orderId", id + 5)
+                .pathParam("orderId", id )
                 .when()
                 .get("/store/order/{orderId}")
                 .then()
                 .statusCode(404);
     }
+    @Test
+    public void testInvertory () {
+        Map map =
+                given()
+                    .when()
+                    .get("/store/inventory")
+                    .then()
+                    .statusCode(200)
+                    .extract().body().as(Map.class);
 
+        System.out.println(map);
+
+        Assert.assertTrue(map.containsKey("sold"), "Inventory не содержит статус sold" );
+
+    }
 }
