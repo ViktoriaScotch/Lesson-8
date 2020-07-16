@@ -1,3 +1,21 @@
 # Project exclude paths
 /target/
 /src/main/resources/my.properties
+### Header element
+.idea
+## First section
+*.jar
+*.war
+*.ear
+out/
+
+## Second section
+.gradle/
+build/
+
+# .gitignore negations
+!out/foo.txt
+!bar/
+
+# Mercurial syntax switch
+syntax: glob
