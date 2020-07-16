@@ -26,12 +26,12 @@ public class HomeTaskApiTest {
     public void setUp() throws IOException {
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
         order = new Order();
-        order.setPetId(1);
-        order.setQuantity(1);
-        order.setId(Integer.parseInt(System.getProperty("orderId")));
-        order.setShipDate("2020-07-13T06:16:42.914Z");
-        order.setComplete(true);
-        order.setStatus("placed");
+        order.setPetId(Integer.parseInt(System.getProperty("pet.id")));
+        order.setQuantity(Integer.parseInt(System.getProperty("quantity")));
+        order.setId(Integer.parseInt(System.getProperty("order.id")));
+        order.setShipDate(System.getProperty("ship.date"));
+        order.setComplete(Boolean.parseBoolean(System.getProperty("compete")));
+        order.setStatus(System.getProperty("status"));
 
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("https://petstore.swagger.io/v2/")
