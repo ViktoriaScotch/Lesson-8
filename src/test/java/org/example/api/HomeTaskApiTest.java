@@ -6,14 +6,17 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.example.model.Order;
+import org.example.model.Pet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 
 import static io.restassured.RestAssured.given;
@@ -107,6 +110,36 @@ public class HomeTaskApiTest {
                 .getMap("");
 
         Assert.assertTrue(inventory.containsKey("sold"), "Inventory не содержит статус sold" );
+    }
+
+    @Test
+    public void testFindPetByStatus(){
+        Pet pet = new Pet();
+        int id = new Random().nextInt(500000);
+        String name = "Pet_" + UUID.randomUUID().toString();
+        String status = "available";
+        pet.setId(id);
+        pet.setName(name);
+        pet.setStatus(status);
+
+        given()
+                .body(pet)
+                .when()
+                .post("/pet")
+                .then()
+                .statusCode(200);
+
+        List<String> petsByStatus = given()
+                .queryParam("status", status)
+                .when()
+                .get("/pet/findByStatus")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .getList("status");
+        Assert.assertTrue(petsByStatus.contains("available"));
     }
 }
 
