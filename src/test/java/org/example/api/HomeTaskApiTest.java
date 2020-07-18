@@ -5,16 +5,12 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
-import org.example.model.Pet;
-import org.example.store.Inventory;
 import org.example.store.Order;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,7 +18,14 @@ import java.util.*;
 import static io.restassured.RestAssured.given;
 
 public class HomeTaskApiTest {
-  int id;
+  int id = new Random().nextInt(10);
+  int petId = new Random().nextInt(10);
+  int quantity = new Random().nextInt(100);
+  String shipDate = DateTimeFormatter.ISO_INSTANT.format(ZonedDateTime.now()).replace("Z", "+0000");
+  String[] arrStatus = {"placed", "approved", "delivered"};
+  int num = new Random().nextInt(2);
+  String status = arrStatus[num];
+  boolean complete = new Random().nextBoolean();
 
   @BeforeClass
   public void prepare() throws IOException {
@@ -42,13 +45,7 @@ public class HomeTaskApiTest {
   @Test
   public void checkOrder() {
     Order order = new Order();
-    id = new Random().nextInt(10);
-    System.setProperty("id", String.valueOf(id));
-    int petId = new Random().nextInt(10);
-    int quantity = new Random().nextInt(100);
-    String shipDate = DateTimeFormatter.ISO_INSTANT.format(ZonedDateTime.now()).replace("Z", "+0000");
-    String status = "placed";
-    boolean complete = new Random().nextBoolean();
+
     order.setId(id);
     order.setPetId(petId);
     order.setQuantity(quantity);
@@ -73,15 +70,11 @@ public class HomeTaskApiTest {
                     .extract().body()
                     .as(Order.class);
 
-    Assert.assertEquals(actual.getPetId(), order.getPetId());
-    Assert.assertEquals(actual.getQuantity(), order.getQuantity());
-    Assert.assertEquals(actual.getShipDate(), order.getShipDate());
-    Assert.assertEquals(actual.getStatus(), order.getStatus());
+    Assert.assertEquals(actual, order, "Объекты не равны");
   }
 
-  @Test
-  public void orderDelete() throws IOException {
-    System.getProperties().load(ClassLoader.getSystemResourceAsStream("set.properties"));
+  @Test (dependsOnMethods = "checkOrder")
+  public void orderDelete() {
 
     given()
             .pathParam("orderId", id)
@@ -99,18 +92,17 @@ public class HomeTaskApiTest {
 
   @Test
   public void checkInventory() {
-    Inventory inventory = new Inventory();
 
-    Inventory actual =
+    Map actual =
             given()
-                    .body(inventory)
                     .when()
                     .get("/store/inventory")
                     .then()
                     .statusCode(200)
                     .extract().body()
-                    .as(Inventory.class);
+                    .jsonPath()
+                    .getMap("");
 
-    Assert.assertTrue(actual.containsKey("available"), "Inventory не содержит статус sold");
+    Assert.assertTrue(actual.containsKey("available"), "Inventory не содержит статус available");
   }
 }
