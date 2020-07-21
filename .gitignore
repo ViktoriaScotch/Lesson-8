@@ -1,3 +1,4 @@
 # Project exclude paths
 /target/
 /src/main/resources/my.properties
+src/main/java/resources/temp.properties
