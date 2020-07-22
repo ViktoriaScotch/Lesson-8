@@ -89,4 +89,24 @@ public class HomeTaskApiTest {
                 .then()
                 .statusCode(404);
     }
+
+    /**
+     *
+     *   Задание со звездочкой
+     *
+     */
+    @Test
+    public void inventoryCheck() {
+        Map inventory =
+                given()
+                        .when()
+                        .get("/store/inventory")
+                        .then()
+                        .statusCode(200)
+                        .extract().body()
+                        .as(Map.class);
+
+        Assert.assertTrue(inventory.containsKey("sold"), "Inventory не содержит статуст sold");
+
+    }
 }
