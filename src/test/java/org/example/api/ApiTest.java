@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 
+
 public class ApiTest {
     @BeforeClass
     public void prepare() throws IOException {
