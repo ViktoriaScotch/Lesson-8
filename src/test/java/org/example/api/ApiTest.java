@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.UUID;
 
@@ -21,7 +22,9 @@ public class ApiTest {
     public void prepare() throws IOException {
 
         // Читаем конфигурационный файл в System.properties -- простейшее HashMap хранилище
-        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
+        InputStream inp = ClassLoader.getSystemResourceAsStream("my.properties");
+        assert (inp != null) : "Файл \"my.properties\" не найден!";
+        System.getProperties().load(inp);
 
         // Здесь мы задаём глобальные преднастройки для каждого запроса. Аналогично можно задавать их
         // перед каждым запросом отдельно, либо создать поле RequestSpecification и задавать весь пакет настроек

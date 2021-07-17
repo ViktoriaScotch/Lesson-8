@@ -5,6 +5,7 @@ import io.restassured.http.Header;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import static io.restassured.RestAssured.given;
 
@@ -14,7 +15,9 @@ public class ApiTestWithoutPrepare {
     @Test
     public void testGet() throws IOException {
         // Читаем конфигурационный файл в System.properties
-        System.getProperties().load(ClassLoader.getSystemResourceAsStream("my.properties"));
+        InputStream inp = ClassLoader.getSystemResourceAsStream("my.properties");
+        assert (inp != null) : "Файл \"my.properties\" не найден!";
+        System.getProperties().load(inp);
         given()//ДАНО:
                 .baseUri("https://petstore.swagger.io/v2/") // задаём базовый адрес каждого ресурса
                 .header(new Header("api_key", System.getProperty("api.key")))// задаём заголовок с токеном для авторизации
